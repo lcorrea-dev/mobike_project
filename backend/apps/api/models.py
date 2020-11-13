@@ -4,11 +4,14 @@ from django.conf import settings
 
 class Bicycle(models.Model):
     purchase_date = models.DateField()
-    qr_code = models.CharField(max_length=10)
+    qr_code = models.CharField(max_length=10, unique=True)
     brand = models.CharField(max_length=200)
     model = models.CharField(max_length=200)
-    m_traveled = models.FloatField()
-    is_locked = models.BooleanField()
+    m_traveled = models.FloatField(default=0)
+    is_locked = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.qr_code+" "+self.brand + " " + self.model
 
 
 class Cyclist(models.Model):

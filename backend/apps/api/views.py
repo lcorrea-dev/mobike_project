@@ -1,7 +1,9 @@
-from django.shortcuts import render
-from django.http import JsonResponse
+from .models import Bicycle
+
+from rest_framework.viewsets import ModelViewSet
+from .serializers import BicycleSerializer
 
 
-def index(request):
-    bicycles = []
-    return JsonResponse(bicycles, safe=False)
+class BicyclesViewSet(ModelViewSet):
+    queryset = Bicycle.objects.all()
+    serializer_class = BicycleSerializer
