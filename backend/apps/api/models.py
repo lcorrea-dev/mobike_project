@@ -22,6 +22,8 @@ class BipMobike(models.Model):
     current_balance = models.IntegerField()
     expiration_date = models.DateField()
     is_active = models.BooleanField()
+    owner = models.OneToOneField(
+        Cyclist, null=True, on_delete=models.CASCADE)
 
 
 class ServiceFee(models.Model):
