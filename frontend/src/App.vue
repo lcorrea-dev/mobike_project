@@ -1,42 +1,49 @@
 <template>
     <div id="app">
+        <ul>
+            <li v-for="(value, key) in state.errors" :key="value.id">
+                {{ key }} : {{ value[0] }}
+            </li>
+        </ul>
         <form @submit.prevent="submitForm">
             <div class="form-group row">
                 <input
                     type="text"
                     class="form-control col-3 mx-2"
                     placeholder="QR Code"
-                    v-model="bicycle.qr_code"
+                    v-model="state.bicycle.qr_code"
                 />
                 <input
                     type="date"
                     class="form-control col-3 mx-2"
                     placeholder="Purchase date"
-                    v-model="bicycle.purchase_date"
+                    v-model="state.bicycle.purchase_date"
                 />
                 <input
                     type="text"
                     class="form-control col-3 mx-2"
                     placeholder="Brand"
-                    v-model="bicycle.brand"
+                    v-model="state.bicycle.brand"
                 />
                 <input
                     type="text"
                     class="form-control col-3 mx-2"
                     placeholder="Model"
-                    v-model="bicycle.model"
+                    v-model="state.bicycle.model"
                 />
                 <input
                     type="number"
                     class="form-control col-3 mx-2"
                     placeholder="Metters traveled"
-                    v-model="bicycle.m_traveled"
+                    v-model="state.bicycle.m_traveled"
                 />
+                <label for="is_locked_chk">is locked?</label>
                 <input
+                    name="is_locked_chk"
                     type="checkbox"
                     class="form-control col-3 mx-2"
                     placeholder="Is locked?"
-                    v-model="bicycle.is_locked"
+                    v-model="state.bicycle.is_locked"
                 />
                 <button class="btn btn-success">Submit</button>
             </div>
@@ -53,9 +60,9 @@
             </thead>
             <tbody>
                 <tr
-                    v-for="bicycle in bicycles"
+                    v-for="bicycle in state.bicycles"
                     :key="bicycle.id"
-                    @dblclick="$data.bicycle = bicycle"
+                    @dblclick="state.bicycle = bicycle"
                 >
                     <td>{{ bicycle.qr_code }}</td>
                     <td>{{ bicycle.purchase_date }}</td>
@@ -78,66 +85,78 @@
 </template>
 
 <script>
+import { reactive } from 'vue';
+
 export default {
     name: 'App',
-
-    data() {
-        return {
+    setup() {
+        const state = reactive({
             bicycle: {},
             bicycles: [],
-        };
-    },
+            errors: [],
+        });
 
-    async created() {
-        await this.getBicycles();
-    },
-
-    methods: {
-        submitForm() {
-            if (this.bicycle.id === undefined) {
+        function submitForm() {
+            if (state.bicycle.id === undefined) {
                 this.createBicycle();
             } else {
                 this.editBicycle();
             }
-        },
+        }
 
-        async getBicycles() {
+        async function getBicycles() {
             var response = await fetch('http://localhost:8000/api/bicycles/');
-            this.bicycles = await response.json();
-        },
+            state.bicycles = await response.json();
+        }
 
-        async createBicycle() {
+        async function createBicycle() {
+            try {
+                await this.getBicycles();
+
+                let response = await fetch(
+                    'http://localhost:8000/api/bicycles/',
+                    {
+                        method: 'post',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(state.bicycle),
+                    }
+                );
+                let jsonResponse = await response.json();
+                console.log('aaaaaa');
+                console.log(jsonResponse);
+                if (!response.ok) {
+                    state.errors = jsonResponse;
+                } else {
+                    state.errors = [];
+                }
+                // this.errors.push(jsonResponse);
+
+                await this.getBicycles();
+            } catch (e) {
+                state.errors = e;
+            }
+        }
+
+        async function editBicycle() {
             await this.getBicycles();
-
-            await fetch('http://localhost:8000/api/bicycles/', {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(this.bicycle),
-            });
-
-            await this.getBicycles();
-        },
-
-        async editBicycle() {
-            await this.getBicycles();
-
             await fetch(
-                `http://localhost:8000/api/bicycles/${this.bicycle.id}/`,
+                `http://localhost:8000/api/bicycles/${state.bicycle.id}/`,
                 {
                     method: 'put',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(this.bicycle),
+                    body: JSON.stringify(state.bicycle),
                 }
             );
 
             await this.getBicycles();
-            this.bicycle = {};
-        },
-        async deleteBicycle(bicycle) {
+            state.bicycle = {};
+        }
+
+        async function deleteBicycle(bicycle) {
             await this.getBicycles();
 
             await fetch(`http://localhost:8000/api/bicycles/${bicycle.id}/`, {
@@ -149,7 +168,20 @@ export default {
             });
 
             await this.getBicycles();
-        },
+        }
+
+        return {
+            state,
+            submitForm,
+            getBicycles,
+            createBicycle,
+            editBicycle,
+            deleteBicycle,
+        };
+    },
+
+    async created() {
+        await this.getBicycles();
     },
 };
 </script>
