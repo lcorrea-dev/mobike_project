@@ -63,6 +63,14 @@
                     <td>{{ bicycle.model }}</td>
                     <td>{{ bicycle.m_traveled }}</td>
                     <td>{{ bicycle.is_locked }}</td>
+                    <td>
+                        <button
+                            class="btn btn-outline-danger btn-sm mx-1"
+                            @click="deleteBicycle(bicycle)"
+                        >
+                            x
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -128,6 +136,19 @@ export default {
 
             await this.getBicycles();
             this.bicycle = {};
+        },
+        async deleteBicycle(bicycle) {
+            await this.getBicycles();
+
+            await fetch(`http://localhost:8000/api/bicycles/${bicycle.id}/`, {
+                method: 'delete',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(this.bicycle),
+            });
+
+            await this.getBicycles();
         },
     },
 };
