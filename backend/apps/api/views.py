@@ -2,6 +2,7 @@ from .models import Bicycle
 
 from rest_framework.viewsets import ModelViewSet
 from .serializers import BicycleSerializer
+# To work with JSON data
 
 
 class BicyclesViewSet(ModelViewSet):
@@ -27,5 +28,7 @@ class BicyclesViewSet(ModelViewSet):
         if m_traveled is not None:
             queryset = queryset.filter(m_traveled__gte=m_traveled)
         if is_locked is not None:
+            is_locked = is_locked.replace(
+                'false', 'False').replace('true', 'True')
             queryset = queryset.filter(is_locked=is_locked)
         return queryset

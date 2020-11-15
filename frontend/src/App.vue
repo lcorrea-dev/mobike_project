@@ -45,10 +45,14 @@
                     placeholder="Is locked?"
                     v-model="state.bicycle.is_locked"
                 />
-                <button class="btn btn-success">Submit</button>
+                <button class="btn btn-success">
+                    Submit
+                </button>
             </div>
         </form>
-
+        <button class="btn btn-success" @click="filterBicycles">
+            Search!
+        </button>
         <table class="table">
             <thead>
                 <th>QR Code</th>
@@ -95,6 +99,34 @@ export default {
             bicycles: [],
             errors: [],
         });
+
+        async function filterBicycles() {
+            console.log(state.bicycle);
+            if (Object.keys(state.bicycle).length === 0) {
+                this.getBicycles();
+                return;
+            }
+            var url = new URL('http://localhost:8000/api/bicycles/');
+
+            var query = state.bicycle;
+            // Delete empty query parameters
+            for (let param in query) {
+                if (
+                    query[param] === undefined ||
+                    query[param] === null ||
+                    query[param] === ''
+                ) {
+                    delete query[param];
+                }
+            }
+
+            url.search = new URLSearchParams(query).toString();
+
+            console.log(query);
+            console.log(url);
+            var response = await fetch(url);
+            state.bicycles = await response.json();
+        }
 
         function submitForm() {
             if (state.bicycle.id === undefined) {
@@ -177,6 +209,7 @@ export default {
             createBicycle,
             editBicycle,
             deleteBicycle,
+            filterBicycles,
         };
     },
 
