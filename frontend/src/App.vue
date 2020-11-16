@@ -163,7 +163,6 @@ export default {
                 } else {
                     state.errors = [];
                 }
-                // this.errors.push(jsonResponse);
 
                 await this.getBicycles();
             } catch (e) {

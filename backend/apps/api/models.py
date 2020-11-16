@@ -2,6 +2,17 @@ from django.db import models
 from django.conf import settings
 
 
+class ParkingLot(models.Model):
+    description = models.CharField(max_length=200)
+    maxCapacity = models.IntegerField()
+    address = models.CharField(max_length=200)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+
+    def __str__(self):
+        return self.description + f" [{str(self.latitude)}, {str(self.longitude)}]"
+
+
 class Bicycle(models.Model):
     purchase_date = models.DateField()
     qr_code = models.CharField(max_length=10, unique=True)
@@ -9,6 +20,8 @@ class Bicycle(models.Model):
     model = models.CharField(max_length=200)
     m_traveled = models.FloatField(default=0)
     is_locked = models.BooleanField(default=True)
+    parking_lot = models.ForeignKey(
+        ParkingLot, related_name='bicycles', blank=True, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.qr_code+" "+self.brand + " " + self.model
@@ -57,6 +70,6 @@ class Rating(models.Model):
 
 class Coordinates(models.Model):
     route = models.ForeignKey(
-        Route, related_name='coordinates', on_delete=models.CASCADE)
+        Route, related_name='coordinates', null=True, on_delete=models.CASCADE)
     latitude = models.FloatField()
     longitude = models.FloatField()
