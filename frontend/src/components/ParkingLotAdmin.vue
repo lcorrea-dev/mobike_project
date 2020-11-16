@@ -85,7 +85,7 @@
                     <td>{{ parkingLot.address }}</td>
                     <td>{{ parkingLot.latitude }}</td>
                     <td>{{ parkingLot.longitude }}</td>
-                    <td>{{ parkingLot.bicycles }}</td>
+                    <td>{{ parkingLot.bicycles.length }}</td>
                     <td>
                         <button
                             class="btn btn-outline-danger btn-sm mx-1"
