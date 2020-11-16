@@ -13,5 +13,5 @@ class BicycleSerializer(ModelSerializer):
 class ParkingLotSerializer(ModelSerializer):
     class Meta:
         model = ParkingLot
-        fields = ['id', 'description', 'maxCapacity',
+        fields = ['id', 'description', 'max_capacity',
                   'address', 'latitude', 'longitude', 'bicycles']

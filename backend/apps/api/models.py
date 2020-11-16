@@ -4,7 +4,7 @@ from django.conf import settings
 
 class ParkingLot(models.Model):
     description = models.CharField(max_length=200)
-    maxCapacity = models.IntegerField()
+    max_capacity = models.IntegerField()
     address = models.CharField(max_length=200)
     latitude = models.FloatField()
     longitude = models.FloatField()

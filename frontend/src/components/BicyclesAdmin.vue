@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div>
         <ul>
             <li v-for="(value, key) in state.errors" :key="value.id">
                 {{ key }} : {{ value[0] }}
@@ -53,7 +53,11 @@
         <button class="btn btn-success" @click="filterBicycles">
             Search!
         </button>
-        <table class="table">
+        <button class="btn btn-success" @click="cleanForm">
+            Clean all!
+        </button>
+        <Map markers="state.markers" />
+        <table class="table table-hover">
             <thead>
                 <th>QR Code</th>
                 <th>Purchase date</th>
@@ -67,6 +71,9 @@
                     v-for="bicycle in state.bicycles"
                     :key="bicycle.id"
                     @dblclick="state.bicycle = bicycle"
+                    :class="[
+                        { 'table-warning': state.bicycle.id === bicycle.id },
+                    ]"
                 >
                     <td>{{ bicycle.qr_code }}</td>
                     <td>{{ bicycle.purchase_date }}</td>
@@ -99,6 +106,12 @@ export default {
             bicycles: [],
             errors: [],
         });
+
+        function cleanForm() {
+            state.bicycle = {};
+            state.errors = [];
+            this.getBicycles();
+        }
 
         async function filterBicycles() {
             console.log(state.bicycle);
@@ -203,6 +216,7 @@ export default {
 
         return {
             state,
+            cleanForm,
             submitForm,
             getBicycles,
             createBicycle,
