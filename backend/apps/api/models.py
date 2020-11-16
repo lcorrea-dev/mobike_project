@@ -19,7 +19,7 @@ class Bicycle(models.Model):
     brand = models.CharField(max_length=200)
     model = models.CharField(max_length=200)
     m_traveled = models.FloatField(default=0)
-    is_locked = models.BooleanField(default=True)
+    is_locked = models.BooleanField()
     parking_lot = models.ForeignKey(
         ParkingLot, related_name='bicycles', blank=True, null=True, on_delete=models.SET_NULL)
 

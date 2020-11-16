@@ -38,13 +38,21 @@
                     v-model="state.bicycle.m_traveled"
                 />
                 <label for="is_locked_chk">is locked?</label>
-                <input
+                <!-- <input
                     name="is_locked_chk"
                     type="checkbox"
                     class="form-control col-3 mx-2"
                     placeholder="Is locked?"
                     v-model="state.bicycle.is_locked"
-                />
+                /> -->
+                <select class="form-control" v-model="state.bicycle.is_locked">
+                    <option
+                        v-for="option in state.options"
+                        :key="option.text"
+                        :value="option.value"
+                        >{{ option.text }}</option
+                    >
+                </select>
                 <button class="btn btn-success">
                     Submit
                 </button>
@@ -105,6 +113,11 @@ export default {
             bicycle: {},
             bicycles: [],
             errors: [],
+            options: [
+                { text: 'Select one', value: null },
+                { text: 'Yes', value: true },
+                { text: 'No', value: false },
+            ],
         });
 
         function cleanForm() {

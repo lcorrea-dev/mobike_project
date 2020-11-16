@@ -119,7 +119,7 @@ export default {
         function cleanForm() {
             state.parkingLot = {};
             state.errors = [];
-            this.getParkingLots();
+            state.parkingLots = this.getParkingLots();
         }
 
         async function filterParkingLots() {
