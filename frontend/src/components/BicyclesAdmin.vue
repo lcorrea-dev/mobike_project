@@ -50,6 +50,7 @@
                         v-for="option in state.options"
                         :key="option.text"
                         :value="option.value"
+                        :selected="option.value == undefined"
                         >{{ option.text }}</option
                     >
                 </select>
@@ -114,7 +115,7 @@ export default {
             bicycles: [],
             errors: [],
             options: [
-                { text: 'Select one', value: null },
+                { text: 'Select one', value: undefined },
                 { text: 'Yes', value: true },
                 { text: 'No', value: false },
             ],
