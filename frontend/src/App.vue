@@ -31,9 +31,9 @@
         </nav>
 
         <div id="active-app">
-            <keep-alive>
-                <component :is="state.currentTab"> </component>
-            </keep-alive>
+            <!-- <keep-alive> -->
+            <component :is="state.currentTab"> </component>
+            <!-- </keep-alive> -->
         </div>
     </div>
 </template>

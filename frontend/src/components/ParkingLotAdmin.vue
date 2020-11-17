@@ -6,61 +6,78 @@
             </li>
         </ul>
         <form @submit.prevent="submitForm">
-            <div class="form-group row">
-                <input
-                    type="text"
-                    class="form-control col-3 mx-2"
-                    placeholder="Description"
-                    v-model="state.parkingLot.description"
-                />
-                <input
-                    type="number"
-                    class="form-control col-3 mx-2"
-                    placeholder="Max Capacity"
-                    v-model="state.parkingLot.max_capacity"
-                />
-                <input
-                    type="text"
-                    class="form-control col-3 mx-2"
-                    placeholder="Address"
-                    v-model="state.parkingLot.address"
-                />
-                <input
-                    type="text"
-                    class="form-control col-3 mx-2"
-                    placeholder="Latitude"
-                    v-model="state.parkingLot.latitude"
-                />
-                <input
-                    type="text"
-                    class="form-control col-3 mx-2"
-                    placeholder="Longitude"
-                    v-model="state.parkingLot.longitude"
-                />
-                <!-- <label for="is_locked_chk">is locked?</label>
-                <input
-                    name="is_locked_chk"
-                    type="checkbox"
-                    class="form-control col-3 mx-2"
-                    placeholder="Is locked?"
-                    v-model="state.parkingLot.is_locked"
-                /> -->
-                <button class="btn btn-success">
-                    Submit
-                </button>
+            <div class="form-row">
+                <div class="col-md-6 mb-3 text-left">
+                    <label for="description_txt">Description</label>
+                    <input
+                        type="text"
+                        class="form-control "
+                        id="description_txt"
+                        placeholder="Description"
+                        v-model="state.parkingLot.description"
+                    />
+                </div>
+                <div class="col-md-6 mb-3 text-left">
+                    <label for="maxcapacity_txt">Max capacity</label>
+                    <input
+                        type="number"
+                        class="form-control "
+                        placeholder="Max Capacity"
+                        id="maxcapacity_txt"
+                        v-model="state.parkingLot.max_capacity"
+                    />
+                </div>
             </div>
+            <div class="form-row">
+                <div class="col-md-6 mb-3 text-left">
+                    <label for="address_txt">Address</label>
+                    <input
+                        type="text"
+                        class="form-control "
+                        placeholder="Address"
+                        id="address_txt"
+                        v-model="state.parkingLot.address"
+                    />
+                </div>
+                <div class="col-md-6 mb-3 text-left">
+                    <label for="latitude_txt">Latitude</label>
+                    <input
+                        type="text"
+                        class="form-control "
+                        placeholder="Latitude"
+                        id="latitude_txt"
+                        v-model="state.parkingLot.latitude"
+                    />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-6 mb-3 text-left">
+                    <label for="longitude_txt">Longitude</label>
+                    <input
+                        type="text"
+                        class="form-control "
+                        placeholder="Longitude"
+                        id="longitude_txt"
+                        v-model="state.parkingLot.longitude"
+                    />
+                </div>
+            </div>
+
+            <button class="btn btn-success btn-lg mb-md-3">
+                Submit
+            </button>
         </form>
-        <button class="btn btn-success" @click="filterParkingLots">
+        <button class="btn btn-info" @click="filterParkingLots">
             Search!
         </button>
-        <button class="btn btn-success" @click="cleanForm">
+        <button class="btn btn-info" @click="cleanForm">
             Clean all!
         </button>
         <keep-alive>
             <Map :parking-lots-position="state.parkingLots" />
         </keep-alive>
 
-        <table class="table table-hover">
+        <table class="table table-hover mt-md-3">
             <thead>
                 <th>Description</th>
                 <th>Max. Capacity</th>
@@ -124,7 +141,6 @@ export default {
         }
 
         async function filterParkingLots() {
-            console.log(state.parkingLot);
             if (Object.keys(state.parkingLot).length === 0) {
                 this.getParkingLots();
                 return;
