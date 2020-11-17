@@ -56,8 +56,9 @@
         <button class="btn btn-success" @click="cleanForm">
             Clean all!
         </button>
-
-        <Map :parking-lots-position="state.parkingLots" />
+        <keep-alive>
+            <Map :parking-lots-position="state.parkingLots" />
+        </keep-alive>
 
         <table class="table table-hover">
             <thead>
@@ -144,9 +145,12 @@ export default {
 
             url.search = new URLSearchParams(query).toString();
 
-            console.log(query);
-            console.log(url);
-            var response = await fetch(url);
+            const token = 'Token 9d6b8e13d658bb78210dad6602ac3ff2112df1e8';
+            var response = await fetch(url, {
+                headers: {
+                    Authorization: token,
+                },
+            });
             state.parkingLots = await response.json();
         }
 
@@ -159,8 +163,14 @@ export default {
         }
 
         async function getParkingLots() {
+            const token = 'Token 9d6b8e13d658bb78210dad6602ac3ff2112df1e8';
             var response = await fetch(
-                'http://localhost:8000/api/parkinglots/'
+                'http://localhost:8000/api/parkinglots/',
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                }
             );
             const parkingLots = await response.json();
             state.parkingLots = parkingLots;
@@ -173,12 +183,14 @@ export default {
                 await this.getParkingLots();
                 var parkingLot = state.parkingLot;
                 parkingLot.bicycles = [];
+                const token = 'Token 9d6b8e13d658bb78210dad6602ac3ff2112df1e8';
                 let response = await fetch(
                     'http://localhost:8000/api/parkinglots/',
                     {
                         method: 'post',
                         headers: {
                             'Content-Type': 'application/json',
+                            Authorization: token,
                         },
                         body: JSON.stringify(parkingLot),
                     }
@@ -200,12 +212,14 @@ export default {
 
         async function editParkingLot() {
             await this.getParkingLots();
+            const token = 'Token 9d6b8e13d658bb78210dad6602ac3ff2112df1e8';
             await fetch(
                 `http://localhost:8000/api/parkinglots/${state.parkingLot.id}/`,
                 {
                     method: 'put',
                     headers: {
                         'Content-Type': 'application/json',
+                        Authorization: token,
                     },
                     body: JSON.stringify(state.parkingLot),
                 }
@@ -217,13 +231,14 @@ export default {
 
         async function deleteParkingLot(parkingLot) {
             await this.getParkingLots();
-
+            const token = 'Token 9d6b8e13d658bb78210dad6602ac3ff2112df1e8';
             await fetch(
                 `http://localhost:8000/api/parkinglots/${parkingLot.id}/`,
                 {
                     method: 'delete',
                     headers: {
                         'Content-Type': 'application/json',
+                        Authorization: token,
                     },
                     body: JSON.stringify(this.parkingLot),
                 }

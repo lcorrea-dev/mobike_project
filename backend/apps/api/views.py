@@ -3,6 +3,7 @@ from .models import Bicycle, ParkingLot
 from rest_framework.viewsets import ModelViewSet
 from .serializers import BicycleSerializer, ParkingLotSerializer
 # To work with JSON data
+from rest_framework.permissions import IsAuthenticated
 
 
 class BicyclesViewSet(ModelViewSet):
@@ -37,6 +38,7 @@ class BicyclesViewSet(ModelViewSet):
 class ParkingLotsViewSet(ModelViewSet):
     queryset = ParkingLot.objects.all()
     serializer_class = ParkingLotSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         queryset = ParkingLot.objects.all()

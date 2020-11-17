@@ -26,24 +26,14 @@
                     >
                         {{ tab }}
                     </li>
-
-                    <!-- <li class="nav-item active">
-                        <a class="nav-link" href="#"
-                            >Bicycles admin
-                            <span class="sr-only">(current)</span></a
-                        >
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Parking Lot Admin</a>
-                    </li> -->
                 </ul>
             </div>
         </nav>
 
         <div id="active-app">
-            <!-- <keep-alive> -->
-            <component :is="state.currentTab"> </component>
-            <!-- </keep-alive> -->
+            <keep-alive>
+                <component :is="state.currentTab"> </component>
+            </keep-alive>
         </div>
     </div>
 </template>

@@ -6,67 +6,93 @@
             </li>
         </ul>
         <form @submit.prevent="submitForm">
-            <div class="form-group row">
-                <input
-                    type="text"
-                    class="form-control col-3 mx-2"
-                    placeholder="QR Code"
-                    v-model="state.bicycle.qr_code"
-                />
-                <input
-                    type="date"
-                    class="form-control col-3 mx-2"
-                    placeholder="Purchase date"
-                    v-model="state.bicycle.purchase_date"
-                />
-                <input
-                    type="text"
-                    class="form-control col-3 mx-2"
-                    placeholder="Brand"
-                    v-model="state.bicycle.brand"
-                />
-                <input
-                    type="text"
-                    class="form-control col-3 mx-2"
-                    placeholder="Model"
-                    v-model="state.bicycle.model"
-                />
-                <input
-                    type="number"
-                    class="form-control col-3 mx-2"
-                    placeholder="Metters traveled"
-                    v-model="state.bicycle.m_traveled"
-                />
-                <label for="is_locked_chk">is locked?</label>
-                <!-- <input
-                    name="is_locked_chk"
-                    type="checkbox"
-                    class="form-control col-3 mx-2"
-                    placeholder="Is locked?"
-                    v-model="state.bicycle.is_locked"
-                /> -->
-                <select class="form-control" v-model="state.bicycle.is_locked">
-                    <option
-                        v-for="option in state.options"
-                        :key="option.text"
-                        :value="option.value"
-                        :selected="option.value == undefined"
-                        >{{ option.text }}</option
-                    >
-                </select>
-                <button class="btn btn-success">
-                    Submit
-                </button>
+            <div class="form-row">
+                <div class="col-md-6 mb-3 text-left">
+                    <label for="qr_code_txt">QR Code</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="qr_code_txt"
+                        placeholder="QR Code"
+                        v-model="state.bicycle.qr_code"
+                    />
+                </div>
+                <div class="col-md-6 mb-3 text-left">
+                    <label for="purchase_date_txt">Purchase date</label>
+                    <input
+                        type="date"
+                        class="form-control"
+                        id="purchase_date_txt"
+                        placeholder="Purchase date"
+                        v-model="state.bicycle.purchase_date"
+                    />
+                </div>
             </div>
+
+            <div class="form-row">
+                <div class="col-md-6 mb-3 text-left">
+                    <label for="brand_txt">Brand</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Brand"
+                        id="brand_txt"
+                        v-model="state.bicycle.brand"
+                    />
+                </div>
+                <div class="col-md-6 mb-3 text-left">
+                    <label for="model_txt">Model</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Model"
+                        id="model_txt"
+                        v-model="state.bicycle.model"
+                    />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-md-6 mb-3 text-left">
+                    <label for="metters_txt">Model</label>
+                    <input
+                        type="number"
+                        class="form-control"
+                        id="metters_txt"
+                        placeholder="Metters traveled"
+                        v-model="state.bicycle.m_traveled"
+                    />
+                </div>
+                <div class="col-md-6 mb-3 text-left">
+                    <label for="is_locked_select">Is locked?</label>
+
+                    <select
+                        class="form-control"
+                        v-model="state.bicycle.is_locked"
+                        id="is_locked_select"
+                    >
+                        <option
+                            v-for="option in state.options"
+                            :key="option.text"
+                            :value="option.value"
+                            :selected="option.value == undefined"
+                            >{{ option.text }}</option
+                        >
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-success btn-lg mb-md-3">
+                Submit
+            </button>
         </form>
-        <button class="btn btn-success" @click="filterBicycles">
+
+        <button class="btn btn-info" @click="filterBicycles">
             Search!
         </button>
-        <button class="btn btn-success" @click="cleanForm">
+        <button class="btn btn-info" @click="cleanForm">
             Clean all!
         </button>
         <Map markers="state.markers" />
-        <table class="table table-hover">
+        <table class="table table-hover mt-md-3 ">
             <thead>
                 <th>QR Code</th>
                 <th>Purchase date</th>
@@ -89,7 +115,7 @@
                     <td>{{ bicycle.brand }}</td>
                     <td>{{ bicycle.model }}</td>
                     <td>{{ bicycle.m_traveled }}</td>
-                    <td>{{ bicycle.is_locked }}</td>
+                    <td>{{ bicycle.is_locked == true ? 'Yes' : 'No' }}</td>
                     <td>
                         <button
                             class="btn btn-outline-danger btn-sm mx-1"
@@ -109,6 +135,7 @@ import { reactive } from 'vue';
 
 export default {
     name: 'BicyclesAdmin',
+
     setup() {
         const state = reactive({
             bicycle: {},
@@ -149,9 +176,12 @@ export default {
 
             url.search = new URLSearchParams(query).toString();
 
-            console.log(query);
-            console.log(url);
-            var response = await fetch(url);
+            const token = 'Token 9d6b8e13d658bb78210dad6602ac3ff2112df1e8';
+            var response = await fetch(url, {
+                headers: {
+                    Authorization: token,
+                },
+            });
             state.bicycles = await response.json();
         }
 
@@ -164,27 +194,32 @@ export default {
         }
 
         async function getBicycles() {
-            var response = await fetch('http://localhost:8000/api/bicycles/');
+            const token = 'Token 9d6b8e13d658bb78210dad6602ac3ff2112df1e8';
+            var response = await fetch('http://localhost:8000/api/bicycles/', {
+                headers: {
+                    Authorization: token,
+                },
+            });
             state.bicycles = await response.json();
         }
 
         async function createBicycle() {
             try {
                 await this.getBicycles();
-
+                const token = 'Token 9d6b8e13d658bb78210dad6602ac3ff2112df1e8';
                 let response = await fetch(
                     'http://localhost:8000/api/bicycles/',
                     {
                         method: 'post',
                         headers: {
                             'Content-Type': 'application/json',
+                            Authorization: token,
                         },
                         body: JSON.stringify(state.bicycle),
                     }
                 );
                 let jsonResponse = await response.json();
-                console.log('aaaaaa');
-                console.log(jsonResponse);
+
                 if (!response.ok) {
                     state.errors = jsonResponse;
                 } else {
@@ -199,12 +234,14 @@ export default {
 
         async function editBicycle() {
             await this.getBicycles();
+            const token = 'Token 9d6b8e13d658bb78210dad6602ac3ff2112df1e8';
             await fetch(
                 `http://localhost:8000/api/bicycles/${state.bicycle.id}/`,
                 {
                     method: 'put',
                     headers: {
                         'Content-Type': 'application/json',
+                        Authorization: token,
                     },
                     body: JSON.stringify(state.bicycle),
                 }
@@ -216,11 +253,12 @@ export default {
 
         async function deleteBicycle(bicycle) {
             await this.getBicycles();
-
+            const token = 'Token 9d6b8e13d658bb78210dad6602ac3ff2112df1e8';
             await fetch(`http://localhost:8000/api/bicycles/${bicycle.id}/`, {
                 method: 'delete',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: token,
                 },
                 body: JSON.stringify(this.bicycle),
             });
