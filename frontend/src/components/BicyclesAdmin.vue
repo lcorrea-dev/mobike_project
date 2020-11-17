@@ -155,7 +155,6 @@ export default {
         }
 
         async function filterBicycles() {
-            console.log(state.bicycle);
             if (Object.keys(state.bicycle).length === 0) {
                 this.getBicycles();
                 return;

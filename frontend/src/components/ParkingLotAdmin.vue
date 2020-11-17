@@ -73,9 +73,11 @@
         <button class="btn btn-info" @click="cleanForm">
             Clean all!
         </button>
-        <keep-alive>
-            <Map :parking-lots-position="state.parkingLots" />
-        </keep-alive>
+
+        <Map
+            :parking-lots-position="state.parkingLots"
+            :key="state.componentKey"
+        />
 
         <table class="table table-hover mt-md-3">
             <thead>
@@ -132,12 +134,17 @@ export default {
             parkingLot: {},
             parkingLots: [],
             errors: [],
+            componentKey: 0,
         });
 
         function cleanForm() {
             state.parkingLot = {};
             state.errors = [];
-            state.parkingLots = this.getParkingLots();
+            this.getParkingLots();
+        }
+
+        function forceRerender() {
+            state.componentKey += 1;
         }
 
         async function filterParkingLots() {
@@ -168,6 +175,7 @@ export default {
                 },
             });
             state.parkingLots = await response.json();
+            this.forceRerender();
         }
 
         function submitForm() {
@@ -188,17 +196,13 @@ export default {
                     },
                 }
             );
-            const parkingLots = await response.json();
-            state.parkingLots = parkingLots;
-
-            return parkingLots;
+            state.parkingLots = await response.json();
         }
 
         async function createParkingLot() {
             try {
                 await this.getParkingLots();
-                var parkingLot = state.parkingLot;
-                parkingLot.bicycles = [];
+                state.parkingLot.bicycles = [];
                 const token = 'Token 9d6b8e13d658bb78210dad6602ac3ff2112df1e8';
                 let response = await fetch(
                     'http://localhost:8000/api/parkinglots/',
@@ -208,19 +212,18 @@ export default {
                             'Content-Type': 'application/json',
                             Authorization: token,
                         },
-                        body: JSON.stringify(parkingLot),
+                        body: JSON.stringify(state.parkingLot),
                     }
                 );
                 let jsonResponse = await response.json();
-                console.log('aaaaaa');
-                console.log(jsonResponse);
+
                 if (!response.ok) {
                     state.errors = jsonResponse;
                 } else {
                     state.errors = [];
                 }
-
                 await this.getParkingLots();
+                this.forceRerender();
             } catch (e) {
                 state.errors = e;
             }
@@ -272,6 +275,7 @@ export default {
             editParkingLot,
             deleteParkingLot,
             filterParkingLots,
+            forceRerender,
         };
     },
 

@@ -1,6 +1,6 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Mobike administration APP</a>
+        <a class="navbar-brand" href="#">Mobike APP</a>
         <button
             class="navbar-toggler"
             type="button"

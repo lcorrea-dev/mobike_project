@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="#">Mobike administration APP</a>
+            <a class="navbar-brand" href="#">Mobike APP</a>
             <button
                 class="navbar-toggler"
                 type="button"
@@ -67,6 +67,5 @@ export default {
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    /* margin-top: 60px; */
 }
 </style>

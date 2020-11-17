@@ -5,7 +5,7 @@
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             ></l-tile-layer>
             <l-marker
-                v-for="parking in state.parkingLots"
+                v-for="parking in parkingLotsPosition"
                 :key="parking.id"
                 :lat-lng="[parking.latitude, parking.longitude]"
             >
@@ -33,7 +33,7 @@ import {
     LPopup,
 } from '@vue-leaflet/vue-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { toRef, reactive } from 'vue';
+import { reactive } from 'vue';
 
 export default {
     props: ['parkingLotsPosition'],
@@ -46,7 +46,7 @@ export default {
     },
     setup(props) {
         const state = reactive({
-            parkingLots: toRef(props, 'parkingLotsPosition'),
+            parkingLots: props.ParkingLotsPosition,
         });
         return {
             state,
